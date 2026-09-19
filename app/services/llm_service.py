@@ -4,12 +4,28 @@ from openai import OpenAI
 
 load_dotenv()
 
-api_key = os.getenv("OPENAI_API_KEY")
+_client: OpenAI | None = None
 
-if not api_key:
-    raise ValueError("OPENAI_API_KEY is not set")
 
-client = OpenAI(api_key=api_key)
+def _get_client() -> OpenAI:
+    """Lazily create the OpenAI client on first real use.
+
+    Keeping this out of module import time means importing llm_service (or
+    anything that imports it, like rag_service) never requires
+    OPENAI_API_KEY to be set — only actually calling generate_answer does.
+    That keeps unit tests and CI free of needing a real API key.
+    """
+    global _client
+
+    if _client is None:
+        api_key = os.getenv("OPENAI_API_KEY")
+
+        if not api_key:
+            raise ValueError("OPENAI_API_KEY is not set")
+
+        _client = OpenAI(api_key=api_key)
+
+    return _client
 
 
 def generate_answer(question: str, context: str) -> str:
@@ -30,9 +46,11 @@ USER QUESTION:
 {question}
 """
 
+    client = _get_client()
+
     response = client.responses.create(
         model="gpt-5.6-luna",
-        input=prompt
+        input=prompt,
     )
 
     return response.output_text

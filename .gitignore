@@ -1,1 +1,28 @@
+# Environment
 .env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.pytest_cache/
+*.egg-info/
+
+# App data (generated at runtime, never commit)
+app/data/chroma/
+app/data/uploads/
+app/data/documents.json
+
+# Frontend / build artifacts
+node_modules/
+dist/
+build/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# TypeScript build cache
+*.tsbuildinfo

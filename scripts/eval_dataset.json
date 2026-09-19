@@ -1,0 +1,10 @@
+[
+  {
+    "question": "What machine learning methods are discussed in this paper?",
+    "expected_keywords": ["SVM", "KNN", "Decision Tree"]
+  },
+  {
+    "question": "What machine learning method is used for skin disease detection?",
+    "expected_keywords": ["SVM", "classification"]
+  }
+]

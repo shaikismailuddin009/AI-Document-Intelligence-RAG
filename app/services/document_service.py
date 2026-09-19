@@ -4,6 +4,18 @@ import re
 from pypdf import PdfReader
 
 
+def sanitize_filename(filename: str) -> str:
+    """Strip directory components and replace unsafe characters.
+
+    Used to keep the *original* filename (stored as metadata / shown in the
+    UI) safe to display and log, even though the file itself is saved on
+    disk under its document_id, not this name.
+    """
+    name = Path(filename).name
+    name = re.sub(r"[^A-Za-z0-9._ -]", "_", name)
+    return name.strip() or "document.pdf"
+
+
 def extract_text_from_pdf(file_path: Path) -> str:
     reader = PdfReader(file_path)
 
